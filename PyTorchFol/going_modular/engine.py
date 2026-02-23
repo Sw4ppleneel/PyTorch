@@ -3,6 +3,8 @@ import torch
 from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
 
+device = 'mps' if torch.mps.is_available() else "cpu"
+
 def train_step(model: torch.nn.Module, 
                dataloader: torch.utils.data.DataLoader, 
                loss_fn: torch.nn.Module, 
@@ -27,6 +29,9 @@ def train_step(model: torch.nn.Module,
 
     (0.1112, 0.8743)
   """
+  # Ensure model is on target device
+  model = model.to(device)
+  
   # Put model in train mode
   model.train()
 
@@ -84,6 +89,9 @@ def test_step(model: torch.nn.Module,
 
     (0.0223, 0.8985)
   """
+  # Ensure model is on target device
+  model = model.to(device)
+  
   # Put model in eval mode
   model.eval() 
 
@@ -151,6 +159,9 @@ def train(model: torch.nn.Module,
                   test_loss: [1.2641, 1.5706],
                   test_acc: [0.3400, 0.2973]} 
   """
+  # Ensure model is on the target device (safety check)
+  model = model.to(device)
+  
   # Create empty results dictionary
   results = {"train_loss": [],
       "train_acc": [],
