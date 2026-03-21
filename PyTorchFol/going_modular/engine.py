@@ -3,6 +3,10 @@ import torch
 from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
 
+from torch.utils.tensorboard import SummaryWriter
+
+writer = SummaryWriter()
+
 device = 'mps' if torch.mps.is_available() else "cpu"
 
 def train_step(model: torch.nn.Module, 
@@ -127,7 +131,8 @@ def train(model: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
           loss_fn: torch.nn.Module,
           epochs: int,
-          device: torch.device) -> Dict[str, List]:
+          device: torch.device , 
+          writer : torch.utils.tensorboard.writer.SummaryWriter = None) -> Dict[str, List]:
   """Trains and tests a PyTorch model.
 
   Passes a target PyTorch models through train_step() and test_step()
@@ -196,5 +201,28 @@ def train(model: torch.nn.Module,
       results["test_loss"].append(test_loss)
       results["test_acc"].append(test_acc)
 
-  # Return the filled results at the end of the epochs
+
+      ##Expetiment tracking 
+      if writer :
+
+        writer.add_scalars(main_tag= "Loss" , tag_scalar_dict= {"Train loss" : train_loss ,
+                                                              "Test_loss" : test_loss})
+      
+        writer.add_scalars(main_tag="Accuracy" , tag_scalar_dict={"Train Acc" : train_acc,
+                                                                "Test Acc": test_acc})
+      
+        writer.add_graph(model=model, 
+                         # Pass in an example input
+                         input_to_model=torch.randn(32, 3, 224, 224).to(device))
+      
+        writer.close()
+      else :
+         pass
+    
+
+  
   return results
+
+
+
+
