@@ -2,6 +2,9 @@
 
 A comprehensive learning repository documenting the progression from PyTorch fundamentals to production-level deep learning models. This repo contains hands-on implementations of neural networks, computer vision models, transfer learning, and experiment tracking.
 
+
+Credit : This repository is inspired and learn from MdBrouke's PyTorch Course! Do check out the amazing resources they have!!
+
 ## 📚 Repository Structure
 
 ```
